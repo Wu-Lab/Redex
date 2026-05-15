@@ -59,5 +59,4 @@ autodoc_mock_imports = [
     "torch",
     "tqdm",
 ]
-# cd Redex
-# python -m sphinx -b html source build/html
+
