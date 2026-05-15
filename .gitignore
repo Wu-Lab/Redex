@@ -1,0 +1,11 @@
+build/
+build_verify/
+build_docs/
+_build/
+_rtd_dummy/
+source/_build/
+source/.doctrees/
+.codex_conda_envs/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
