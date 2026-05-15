@@ -1,0 +1,5 @@
+sphinx>=5
+nbsphinx>=0.9
+myst-parser>=1.0
+ipython
+sphinx-book-theme
