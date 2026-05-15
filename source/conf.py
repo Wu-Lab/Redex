@@ -9,8 +9,8 @@ sys.path.insert(0, str(ROOT / "src"))
 
 
 project = "Redex"
-copyright = "2026, Fan Yuan, Qingbin Zhou."
-# author = "Redex contributors"
+copyright = "2026, Fan Yuan; Qingbin Zhou"
+author = "Fan Yuan; Qingbin Zhou"
 release = "v0.1.0"
 
 
