@@ -58,7 +58,7 @@ python -m ipykernel install --user --name redex --display-name redex
 ```
 
 ## Tutorial
-For the step-by-step tutorial, please refer to: [Redex tutorial](https://redex-1.readthedocs.io/en/latest)
+For the step-by-step tutorial, please refer to: [Redex tutorial](https://redex-1.readthedocs.io/en/latest/About.html)
 
 ## Data
 
