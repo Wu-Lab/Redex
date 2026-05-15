@@ -22,268 +22,32 @@ class Redex():
      
       
         '''
-  #  ATAC
-        self.epochs=700
-        self.num_heads=13
-        self.alpha=20
-        self.beta=6
 
-        self.lambd=0.001
+        self.epochs=700
+        self.dim_input=3000
+        self.gene_path=gene_path
+        self.alpha=9
+        self.der=0.00001 
+        self.beta=1
+        self.lambd=0.01
+        self.epochs=600
         self.dfr=0.01
-        self.der=0
+        self.num_heads=6
         self.learning_rate=0.001
         self.weight_decay=0.0001
-        self.dim_input=3000
         self.dataset_name=dataset_name
-        self.gene_path=gene_path
         self.dim_hidden=128
         self.n_layers=2
         self.dim_output123=64
+
+         
+
+        print( 'self.der',self.der)
+        print( 'self.alpha',self.alpha)
+        print( 'self.beta',self.beta)
         
-        print(' self.alpha', self.alpha)
-        print('  self.beta',  self.beta)
         print('   self.num_heads',   self.num_heads)
-  
-   #seqFISH  3000gene 重新调参
-        # self.epochs=600
-        # self.num_heads=20
-        # self.alpha=40
-        # self.beta=1
 
-        # self.lambd=0.01
-        # self.dfr=0.01
-       
-
-        
-        # self.der=0
-        # self.learning_rate=0.001
-        # self.weight_decay=0.0001
-        # self.dim_input=3000
-        # self.dataset_name=dataset_name
-        # self.gene_path=gene_path
-        # self.dim_hidden=128
-        # self.n_layers=2
-        # self.dim_output123=64
-        
-        # print(' self.num_heads', self.num_heads)
-        # print(' self.alpha', self.alpha)
-        # print(' self.self.beta', self.beta)
-      
-    # # # # # ###########################
-       #mMouse Olfactory
-        
-        # self.epochs=600
-        # self.num_heads=6
-        # #试一试head=6
-        # self.lambd=0.01
-        # self.dfr=0.01
-
-        # self.alpha=12
-        # self.beta=4
-    
-        
-        # self.der=0
-        # self.learning_rate=0.001
-        # self.weight_decay=0.0001
-        # self.dim_input=3000
-        # self.dataset_name=dataset_name
-        # self.gene_path=gene_path
-        # self.dim_hidden=128
-        # self.n_layers=2
-        # self.dim_output123=64
-        
-        
-        
-        # print(' self.num_heads', self.num_heads)
-        # print(' self.alpha', self.alpha)
-        # print(' self.self.beta', self.beta)
-  
-   ####################################
-     #  MOSTA    OPT V3 GENE
-        
-        # self.alpha=50
-        # self.beta=1
-        # self.epochs=600
-        # self.num_heads=6
-
-        # self.lambd=0.01
-        # self.dfr=0.01
-        # self.der=0
-        # self.learning_rate=0.001
-        # self.weight_decay=0.0001
-        # self.dim_input=3000
-        # self.dataset_name=dataset_name
-        # self.gene_path=gene_path
-        # self.dim_hidden=128
-        # self.n_layers=2
-        # self.dim_output123=64
-        # print(' self.der', self.der)
-        # print(' self.alpha', self.alpha)
-        # print(' self.self.beta', self.beta)
-        # print('MOSTA')
-
-        # ####################################
-#            MOSTA   OPT our gene mclust
-        # self.alpha=20
-        # self.beta=1
-        # self.num_heads=6
-
-        # self.epochs=600
-        # self.lambd=0.01
-        # self.dfr=0.01
-       
-        # self.der=0
-        # self.learning_rate=0.001
-        # self.weight_decay=0.0001
-        # self.dim_input=3000
-        # self.dataset_name=dataset_name
-        # self.gene_path=gene_path
-        # self.dim_hidden=128
-        # self.n_layers=2
-        # self.dim_output123=64
-        
-        # print(' self.alpha', self.alpha)
-        # print(' self.self.beta', self.beta)
-        # print(' self.num_heads', self.num_heads)
-        # print('MOSTA our gene')
-# #################################################################
-          # ####################################
-#          ###  MOSTA   OPT our gene louvain
-        # self.alpha=60
-        # self.beta=1
-        # self.num_heads=20
-        # self.epochs=600
-        
-        # self.der=0
-        # #self.der=0.00001 
-        
-        # self.lambd=0.01
-        # self.dfr=0.01
-
-        
-        # self.learning_rate=0.001
-        # self.weight_decay=0.0001
-        # self.dim_input=3000
-        # self.dataset_name=dataset_name
-        # self.gene_path=gene_path
-        # self.dim_hidden=128
-        # self.n_layers=2
-        # self.dim_output123=64
-        
-        # print(' self.alpha', self.alpha)
-        # print(' self.self.beta', self.beta)
-        # print(' self.num_heads', self.num_heads)
-        # print('MOSTA our gene')
-        # ##########################################
-      # 3.Human_Breast_Cancer
-        # self.epochs=700
-        # self.beta=3
-        # self.lambd=0.01
-        # self.alpha=8
-        # self.dfr=0.01
-        # self.num_heads=7
-
-
-        # self.learning_rate=0.001
-        # self.weight_decay=0.0001
-        # self.dim_input=3000
-        # self.dataset_name=dataset_name
-        # self.gene_path=gene_path
-        # self.dim_hidden=128
-        # self.n_layers=2
-        # self.dim_output123=64
-        # self.der=0   
-        # print('self.num_heads',self.num_heads)
-##########################
-        #2.Mouse_Brain_Anterior OPT PARAMETER
-        # self.epochs=600
-        # self.beta=3
-        # self.lambd=0.01
-        # self.alpha=8
-        # self.dfr=0.01
-        # self.num_heads=6
-
-        # self.learning_rate=0.001
-        # self.weight_decay=0.0001
-        # self.dim_input=3000
-        # self.dataset_name=dataset_name
-        # self.gene_path=gene_path
-        # self.dim_hidden=128
-        # self.n_layers=2
-        # self.dim_output123=64
-        # self.der=0   
-        # print( 'self.dim_hidden',self.dim_hidden)
-         
-     ##########################
-        
-      
-        
-        ###################
-       #V3geneDLPFC
-        # self.alpha=10
-        # self.der=0.00001 
-
-        # self.beta=1
-        # self.lambd=0.01
-        # self.epochs=600
-        # self.dfr=0.01
-        # self.num_heads=6
-        # self.learning_rate=0.001
-        # self.weight_decay=0.0001
-        # self.dataset_name=dataset_name
-        
-        # self.dim_hidden=256
-        # self.n_layers=2
-        # self.dim_output123=64
-
-         
-
-    #     print( 'self.der',self.der)
-    #     print( 'self.alpha',self.alpha)
-    #     print( 'self.beta',self.beta)
-    #    #(记得高一下比如0.001)   
-        
-    #     #################
-           
-#####################################
-        
-        
-
-      #OPT PARAMETER forDLPFC Our gene
-
-        # self.alpha=9
-        # self.der=0.00001 
-
-        # self.beta=1
-        # self.lambd=0.01
-
-        # self.epochs=600
-        # self.dfr=0.01
-
-        # self.num_heads=6
-        # self.learning_rate=0.001
-        # self.weight_decay=0.0001
-        # self.dataset_name=dataset_name
-        
-        # self.dim_hidden=128
-        # self.n_layers=2
-        # self.dim_output123=64
-
-         
-
-        # print( 'self.der',self.der)
-        # print( 'self.alpha',self.alpha)
-        # print( 'self.beta',self.beta)
-      
-    
-           
-       
-#####################################
-        
-        
-        ########
-        
-        #
        
         self.random_seed = 2024
         self.adata = adata.copy()
