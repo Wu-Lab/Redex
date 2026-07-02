@@ -75,7 +75,7 @@ After downloading, place the datasets under the repository root following the la
 
 ## Citation
 
-> *Redex: spatially variable feature identification based on regional differential expression*. 
+> *Redex: a unified framework for spatially variable feature identification across omics modalities via regional differential expression*. 
 <br />
 
 ## License ##
