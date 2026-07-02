@@ -8,11 +8,16 @@ The method was designed for spatially resolved molecular data where each observa
 
 ## Workflow
 
-Redex contains three main modules:
+Redex provides an end-to-end workflow for spatial omics analysis:
 
-1. Spatially variable feature (SVF) selection: ranks genes, peaks, or derived features by combining spatial coherence, regional expression contrast, and global expression heterogeneity.
-2. Spatial spot clustering: learns spatially informed embeddings with a graph attention network and self-supervised contrastive learning, then clusters spots into spatial domains.
-3. Marker feature selection: identifies region-specific marker features by comparing within-domain and out-of-domain expression levels.
+1. **Spatially variable feature prioritization**  
+   Redex ranks genes, peaks, or derived spatial features using the Redex score.
+
+2. **Spatial domain segmentation**  
+   Top-ranked features are used to learn spatially informed embeddings for identifying spatial domains.
+
+3. **Marker feature detection**  
+   Region-specific markers are detected by comparing within-domain and out-of-domain expression patterns.
 
 Common downstream analyses include spatial domain segmentation, UMAP visualization, PAGA trajectory analysis, ARI/NMI evaluation, marker feature detection, SV peak prioritization, and spatial gene-pair co-expression analysis.
 
