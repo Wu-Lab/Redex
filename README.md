@@ -8,7 +8,7 @@ The method was designed for spatially resolved molecular data where each observa
 
 ## Workflow
 
-Redex provides an end-to-end workflow for spatial omics analysis:
+Redex supports a workflow for spatial omics analysis:
 
 1. **Spatially variable feature prioritization**  
    Redex ranks genes, peaks, or derived spatial features using the Redex score.
@@ -19,8 +19,10 @@ Redex provides an end-to-end workflow for spatial omics analysis:
 3. **Marker feature detection**  
    Region-specific markers are detected by comparing within-domain and out-of-domain expression patterns.
 
-Common downstream analyses include spatial domain segmentation, UMAP visualization, PAGA trajectory analysis, ARI/NMI evaluation, marker feature detection, SV peak prioritization, and spatial gene-pair co-expression analysis.
+4. **Downstream spatial interpretation**  
+   Redex supports spatially variable gene detection, spatially variable peak identification, gene-gene relationship discovery, trajectory analysis, spatial domain segmentation, and marker feature identification.
 
+Redex can be applied to spatial transcriptomics, spatial ATAC-seq, and derived spatial feature matrices such as local gene-pair co-expression profiles.
 ## Installation
 
 Clone the repository and create a Python environment:
