@@ -23,14 +23,13 @@ class Redex():
       
         '''
 
-        self.epochs=700
+        self.epochs=600
         self.dim_input=3000
         self.gene_path=gene_path
         self.alpha=9
         self.der=0.00001 
         self.beta=1
         self.lambd=0.01
-        self.epochs=600
         self.dfr=0.01
         self.num_heads=6
         self.learning_rate=0.001
