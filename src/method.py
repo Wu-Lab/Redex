@@ -23,14 +23,7 @@ def min_max_scale(data, feature_range=(0, 1)):
     return scaled_data
 
 # Preprocessing Function
-# def preprocess_adata(adata, min_cells=20):
-#     adata.var_names_make_unique()
-#     sc.pp.filter_genes(adata, min_cells=min_cells)
-#     sc.pp.normalize_total(adata)
-#     sc.pp.log1p(adata)
-#     adata.X = min_max_scale(adata.X)
-    
-#     return adata
+
 def preprocess_adata(adata, min_cells=20):
     # 确保基因名称唯一
     adata.var_names_make_unique()
@@ -124,32 +117,6 @@ def compute_weight_matrices(adata, neighbors, num_workers):
             W_gs_all_genes[gene_name] = W_gs
     return W_gs_all_genes
 
-# # ------------------ Compute Weight Matrices ------------------(dataframe)
-# def compute_weight_for_gene(gene_name, num_cells, adata, neighbors):
-#     H_g = set(adata.var.loc[gene_name, 'H_g'])
-#     L_g = set(adata.var.loc[gene_name, 'L_g'])
-#     W_gs = np.zeros(num_cells)
-    
-#     for s in range(num_cells):
-#         n_s_set = set(neighbors[s])
-#         if s in H_g:
-#             intersection_size = len(n_s_set & H_g)
-#             W_gs[s] = intersection_size / len(n_s_set) if len(n_s_set) > 0 else 0
-#         elif s in L_g:
-#             intersection_size = len(n_s_set & L_g)
-#             W_gs[s] = intersection_size / len(n_s_set) if len(n_s_set) > 0 else 0
-#     return W_gs
-
-# def compute_weight_matrices(adata, neighbors, num_workers=-1):
-#     num_cells = adata.n_obs
-#     results = Parallel(n_jobs=num_workers)(
-#         delayed(compute_weight_for_gene)(gene_name, num_cells, adata, neighbors)
-#         for gene_name in tqdm(adata.var_names, desc="Computing weight matrices")
-#     )
-#     W_gs_matrix = np.array(results)
-#     W_gs_df = pd.DataFrame(W_gs_matrix, index=adata.var_names, columns=adata.obs_names)
-    
-#     return W_gs_df
 
 #  ------------------ Compute R Values ------------------
 def compute_r_value_for_gene(gene_name, weights, expression_df, adata):
@@ -166,7 +133,11 @@ def compute_r_value_for_gene(gene_name, weights, expression_df, adata):
     avg_L_g_big_H_g_zero = (sum(gene_exp_list[s] for s in L_g_big) / len(L_g_big)) if len(L_g_big)>0 else 0
 
     B_g = avg_H_g_big_L_g_zero - avg_L_g_big_H_g_zero
-    A_g = sum(weights[s] for s in H_g) / len(H_g) if H_g else 0 + sum(weights[s] for s in L_g) / len(L_g) if L_g else 0
+    
+    A_g = sum(weights[s] for s in H_g) / len(H_g) if H_g else 0
+    
+    
+
     return gene_name, A_g, B_g, C_g
 
 def compute_r_values(adata, W_gs_all_genes, num_workers):
@@ -186,52 +157,3 @@ def compute_r_values(adata, W_gs_all_genes, num_workers):
     print(f' R_g =A_g * B_g * C_g ')        
     return results, R_g_values
 
-# # ------------------ Compute R Values ------------------(dataframe)
-# def compute_r_value_for_gene(gene_name, weights, expression_matrix, adata):
-#     num_cells = adata.n_obs
-#     H_g = set(adata.var.loc[gene_name, 'H_g'])
-#     L_g = set(adata.var.loc[gene_name, 'L_g'])
-    
-#     gene_expression = pd.DataFrame(expression_matrix, index=adata.obs_names, columns=adata.var_names)[gene_name]
-#     mean_expression = np.mean(gene_expression)
-#     var_expression = np.var(gene_expression)
-#     C_g = var_expression / mean_expression if mean_expression != 0 and var_expression != 0 else 1
-    
-#     H_g_big = [s for s in H_g if weights.get(s, 0) > 0]
-#     L_g_big = [s for s in L_g if weights.get(s, 0) > 0]
-    
-#     avg_H_g_big_L_g_zero = (np.sum(weights.get(s, 0) * gene_expression.iloc[s] for s in H_g_big) / len(H_g_big)) if len(H_g_big) > 0 else 0
-#     avg_L_g_big_H_g_zero = (np.sum(gene_expression.iloc[s] for s in L_g_big) / len(L_g_big)) if len(L_g_big) > 0 else 0
-    
-#     B_g = avg_H_g_big_L_g_zero - avg_L_g_big_H_g_zero
-#     A_g = (np.sum(weights.get(s, 0) for s in H_g) / len(H_g) if H_g else 0) + (np.sum(weights.get(s, 0) for s in L_g) / len(L_g) if L_g else 0)
-    
-#     return gene_name, A_g, B_g, C_g
-
-# def compute_r_value_worker(gene_name, W_gs_df, expression_matrix, adata):
-#     weights = W_gs_df.loc[gene_name].to_dict()
-#     return compute_r_value_for_gene(gene_name, weights, expression_matrix, adata)
-
-# def compute_r_values(adata, W_gs_df, num_workers):
-#     expression_matrix = adata.X.toarray() if issparse(adata.X) else adata.X
-#     gene_names = W_gs_df.index
-    
-#     results = []
-    
-#     # Initialize the tqdm progress bar
-#     with tqdm(total=len(gene_names), desc="Computing R values") as pbar:
-#         # Use ProcessPoolExecutor for parallel computation
-#         with ProcessPoolExecutor(max_workers=num_workers) as executor:
-#             # Submit tasks to the executor
-#             futures = {executor.submit(compute_r_value_worker, gene_name, W_gs_df, expression_matrix, adata): gene_name for gene_name in gene_names}
-            
-#             # Update progress bar as tasks complete
-#             for future in futures:
-#                 result = future.result()
-#                 results.append(result)
-#                 pbar.update(1)
-    
-#     # Convert the results to a DataFrame
-#     r_values_df = pd.DataFrame(results, columns=['gene_name', 'A_g', 'B_g', 'C_g']).set_index('gene_name')
-    
-#     return r_values_df
