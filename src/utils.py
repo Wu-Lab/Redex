@@ -14,7 +14,12 @@ import matplotlib.pyplot as plt
 # ============================================================
 
 def mclust_R(adata, num_cluster, modelNames='EEE', used_obsm='emb_pca', random_seed=2024):
-    """Clustering using the mclust algorithm (requires R and rpy2)."""
+    """
+    Clustering using the mclust algorithm (requires R and rpy2).
+
+    If num_cluster is None, the number of clusters is selected automatically
+    by Mclust using BIC. Otherwise, the specified number of clusters is used.
+    """
     np.random.seed(random_seed)
     import rpy2.robjects as robjects
     robjects.r.library("mclust")
@@ -24,11 +29,27 @@ def mclust_R(adata, num_cluster, modelNames='EEE', used_obsm='emb_pca', random_s
     r_random_seed(random_seed)
     rmclust = robjects.r['Mclust']
 
-    res = rmclust(rpy2.robjects.numpy2ri.numpy2rpy(adata.obsm[used_obsm]), num_cluster, modelNames)
+    data_r = rpy2.robjects.numpy2ri.numpy2rpy(adata.obsm[used_obsm])
+
+    if num_cluster is None:
+        # Unknown K: let Mclust select the number of clusters using BIC.
+        # modelNames remains fixed (default: EEE), consistent with the
+        # clustering model used when K is specified.
+        res = rmclust(data_r, modelNames=modelNames)
+    else:
+        # Known K: preserve the original behavior.
+        res = rmclust(data_r, G=num_cluster, modelNames=modelNames)
+
     mclust_res = np.array(res[-2])
 
     adata.obs['mclust'] = mclust_res
     adata.obs['mclust'] = adata.obs['mclust'].astype('int').astype('category')
+
+    selected_k = len(np.unique(mclust_res))
+    adata.uns['mclust_n_clusters'] = selected_k
+    if num_cluster is None:
+        print(f'Mclust selected {selected_k} clusters by BIC.')
+
     return adata
 
 
@@ -40,7 +61,9 @@ def clustering(adata, n_clusters=7, radius=50, key='emb', method='mclust',
     Parameters
     ----------
     adata : AnnData
-    n_clusters : int
+    n_clusters : int or None
+        Target number of clusters. If None and method='mclust', Mclust
+        automatically selects the number of clusters using BIC.
     radius : int
         Number of neighbors for spatial refinement.
     method : str
@@ -213,13 +236,19 @@ def find_marker_genes(adata, output_path, cluster_key='mclust', quant_in=30, qua
         expr_out = expr_df.loc[~in_mask]
 
         ratios = {}
+        log2fc_values = {}
         for gene in genes:
             q_in = np.percentile(expr_in[gene].values, quant_in)
             q_out = np.percentile(expr_out[gene].values, quant_out) if len(expr_out) > 0 else np.nan
             ratios[gene] = q_in / (q_out + eps)
+            mean_in = float(expr_in[gene].mean())
+            mean_out = float(expr_out[gene].mean()) if len(expr_out) > 0 else np.nan
+            log2fc_values[gene] = np.log2((mean_in + eps) / (mean_out + eps))
 
         marker_df = pd.DataFrame(list(ratios.items()), columns=['gene', 'marker_score'])
-        marker_df.sort_values('marker_score', ascending=False, inplace=True)
+        marker_df['log2FC'] = marker_df['gene'].map(log2fc_values)
+        marker_df.sort_values(['marker_score', 'log2FC'], ascending=[False, False],
+                              kind='mergesort', na_position='last', inplace=True)
         marker_df.to_csv(os.path.join(output_path, f"domain_{int(domain):02d}_marker_genes.csv"), index=False)
         marker_results[domain] = marker_df
 
